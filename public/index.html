@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Citas Médicas</title>
+    <link rel="shortcut icon" href="./img/inicio.png" type="image/x-icon">
+    <link rel="stylesheet" href="./css/fontawesome/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+
+    <!-- ============ NAVBAR ============ -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2 cursor-pointer" onclick="window.location.href='/'">
+                    <span class="text-3xl">🏥</span>
+                    <span
+                        class="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        MediCita
+                    </span>
+                </div>
+
+                <!-- Menu Escritorio  -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#inicio" class="text-gray-700 hover:text-blue-600 transition">Inicio</a>
+                    <a href="#caracteristicas" class="text-gray-700 hover:text-blue-600 transition">Características</a>
+                    <a href="#como-funciona" class="text-gray-700 hover:text-blue-600 transition">¿Cómo funciona?</a>
+                    <a href="#contacto" class="text-gray-700 hover:text-blue-600 transition">Contacto</a>
+                </div>
+
+                <!-- Buttons -->
+                <div class="flex items-center space-x-3">
+                    <a href="/login"
+                        class="px-5 py-2 text-blue-600 border border-blue-600 rounded-xl hover:bg-blue-50 transition font-medium">
+                        Iniciar Sesión
+                    </a>
+                    <a href="/register"
+                        class="px-5 py-2 hero-gradient text-white rounded-xl hover:opacity-90 transition font-medium shadow-md">
+                        Registrarse
+                    </a>
+                </div>
+
+                <!-- Boton hamburguesa -->
+                <div class="md:hidden">
+                    <button id="mobileMenuBtn" class="text-gray-600 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Menu Para celular-->
+            <div id="mobileMenu" class="hidden md:hidden pb-4">
+                <a href="#inicio" class="block py-2 text-gray-700 hover:text-blue-600">Inicio</a>
+                <a href="#caracteristicas" class="block py-2 text-gray-700 hover:text-blue-600">Características</a>
+                <a href="#como-funciona" class="block py-2 text-gray-700 hover:text-blue-600">¿Cómo funciona?</a>
+                <a href="#contacto" class="block py-2 text-gray-700 hover:text-blue-600">Contacto</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============ SECCION PRINCIÁL ============ -->
+    <section id="inicio" class="hero-gradient text-white py-20 fade-in">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <h1 class="text-4xl md:text-5xl font-bold leading-tight">
+                        Gestión inteligente de <span class="text-yellow-300">citas médicas</span>
+                    </h1>
+                    <p class="text-lg text-blue-100">
+                        Optimiza los procesos de agendamiento, reduce tiempos de espera y mejora la experiencia de tus
+                        pacientes con nuestra plataforma web moderna y accesible.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="/register"
+                            class="px-8 py-3 bg-white text-purple-600 rounded-xl font-semibold hover:shadow-xl transition transform hover:scale-105">
+                            Comenzar gratis
+                        </a>
+                        <a href="#como-funciona"
+                            class="px-8 py-3 border border-white rounded-xl font-semibold hover:bg-white hover:text-purple-600 transition">
+                            Ver demo
+                        </a>
+                    </div>
+                    <div class="flex items-center space-x-6 pt-4">
+                        <div>
+                            <span class="text-2xl font-bold">500+</span>
+                            <p class="text-sm text-blue-100">Pacientes atendidos</p>
+                        </div>
+                        <div>
+                            <span class="text-2xl font-bold">50+</span>
+                            <p class="text-sm text-blue-100">Médicos activos</p>
+                        </div>
+                        <div>
+                            <span class="text-2xl font-bold">98%</span>
+                            <p class="text-sm text-blue-100">Satisfacción</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <img src="./img/iniciov1.jpg" alt="Ilustración de citas médicas" class="rounded-2xl shadow-2xl">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ SECCION CARACTERISTICAS ============ -->
+    <section id="caracteristicas" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+                    Características principales
+                </h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Todo lo que necesitas para gestionar tu consulta médica de manera correcta
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Característica 1 -->
+                <div class="card-hover bg-gray-50 rounded-2xl p-8 text-center">
+                    <div class="w-16 h-16 hero-gradient rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-regular fa-calendar text-[26px] text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Agendamiento 24/7</h3>
+                    <p class="text-gray-600">
+                        Los pacientes pueden agendar citas en cualquier momento, desde cualquier lugar, sin necesidad de
+                        llamar.
+                    </p>
+                </div>
+
+                <!-- Característica 2 -->
+                <div class="card-hover bg-gray-50 rounded-2xl p-8 text-center">
+                    <div
+                        class="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-check text-[26px] text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Sin doble agendamiento</h3>
+                    <p class="text-gray-600">
+                        Sistema inteligente que evita conflictos de horarios y asegura disponibilidad en tiempo real.
+                    </p>
+                </div>
+
+                <!-- Característica 3 -->
+                <div class="card-hover bg-gray-50 rounded-2xl p-8 text-center">
+                    <div
+                        class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-regular fa-envelope text-[26px] text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Notificaciones automáticas</h3>
+                    <p class="text-gray-600">
+                        Recordatorios por email para reducir ausencias y mejorar la puntualidad de los pacientes.
+                    </p>
+                </div>
+
+                <!-- Característica 4 -->
+                <div class="card-hover bg-gray-50 rounded-2xl p-8 text-center">
+                    <div
+                        class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-arrow-up-right-dots text-[26px] text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Reportes estadísticos</h3>
+                    <p class="text-gray-600">
+                        Visualiza indicadores clave: citas por especialidad, tasas de cancelación y ocupación.
+                    </p>
+                </div>
+
+                <!-- Característica 5 -->
+                <div class="card-hover bg-gray-50 rounded-2xl p-8 text-center">
+                    <div
+                        class="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-mobile text-[26px] text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Diseño responsive</h3>
+                    <p class="text-gray-600">
+                        Accede desde cualquier dispositivo: computadora, tablet o teléfono móvil.
+                    </p>
+                </div>
+
+                <!-- Característica 6 -->
+                <div class="card-hover bg-gray-50 rounded-2xl p-8 text-center">
+                    <div
+                        class="w-16 h-16 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-lock text-[26px] text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Datos seguros</h3>
+                    <p class="text-gray-600">
+                        Cumplimiento con normas de protección de datos personales (Ley 1581 de 2012).
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ COMO FUNCIONA ============ -->
+    <section id="como-funciona" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+                    ¿Cómo funciona?
+                </h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Tres pasos simples para gestionar tus citas médicas
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div
+                        class="w-20 h-20 hero-gradient rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-white">
+                        1
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Regístrate</h3>
+                    <p class="text-gray-600">
+                        Crea tu cuenta como paciente de forma gratuita en menos de 2 minutos.
+                    </p>
+                </div>
+                <div class="text-center">
+                    <div
+                        class="w-20 h-20 hero-gradient rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-white">
+                        2
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Agenda tu cita</h3>
+                    <p class="text-gray-600">
+                        Selecciona el médico, especialidad, fecha y hora disponible que prefieras.
+                    </p>
+                </div>
+                <div class="text-center">
+                    <div
+                        class="w-20 h-20 hero-gradient rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-white">
+                        3
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Recibe atención</h3>
+                    <p class="text-gray-600">
+                        Asiste a tu cita y recibe recordatorios automáticos para no olvidarla.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Roles Section -->
+            <div class="mt-16 grid md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-2xl p-6 shadow-md">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="text-3xl">👤</span>
+                        <h3 class="text-lg font-bold text-gray-800">Para Pacientes</h3>
+                    </div>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>✓ Registro sencillo y gratuito</li>
+                        <li>✓ Visualización de médicos y horarios</li>
+                        <li>✓ Agendamiento en línea 24/7</li>
+                        <li>✓ Cancelación y reprogramación flexible</li>
+                        <li>✓ Recordatorios automáticos</li>
+                    </ul>
+                    <a href="/register" class="mt-4 inline-block text-blue-600 font-semibold">Registrarse →</a>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 shadow-md">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="text-3xl">👨‍⚕️</span>
+                        <h3 class="text-lg font-bold text-gray-800">Para Médicos</h3>
+                    </div>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>✓ Visualización de agenda diaria</li>
+                        <li>✓ Gestión de citas y pacientes</li>
+                        <li>✓ Actualización de estados de cita</li>
+                        <li>✓ Historial de atenciones</li>
+                        <li>✓ Reporte de pacientes atendidos</li>
+                    </ul>
+                    <a href="/login" class="mt-4 inline-block text-blue-600 font-semibold">Iniciar sesión →</a>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 shadow-md">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="text-3xl">👨‍💼</span>
+                        <h3 class="text-lg font-bold text-gray-800">Para Administradores</h3>
+                    </div>
+                    <ul class="space-y-2 text-gray-600">
+                        <li>✓ Gestión completa del sistema</li>
+                        <li>✓ Visualización global de citas</li>
+                        <li>✓ Reportes estadísticos</li>
+                        <li>✓ Dashboard con indicadores clave</li>
+                        <li>✓ Gráficos de ocupación</li>
+                    </ul>
+                    <a href="/login" class="mt-4 inline-block text-blue-600 font-semibold">Iniciar sesión →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ============ CONTACTO ============ -->
+    <section id="contacto" class="hero-gradient py-16">
+        <div class="max-w-4xl mx-auto text-center px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                ¿Listo para optimizar tu consulta médica?
+            </h2>
+            <p class="text-blue-100 mb-8 text-lg">
+                Únete a cientos de profesionales que ya confían en nuestro sistema
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="/register"
+                    class="px-8 py-3 bg-white text-purple-600 rounded-xl font-semibold hover:shadow-xl transition">
+                    Comenzar ahora
+                </a>
+                <a href="#caracteristicas"
+                    class="px-8 py-3 border border-white text-white rounded-xl font-semibold hover:bg-white hover:text-purple-600 transition">
+                    Conocer más
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="text-2xl">🏥</span>
+                        <span class="font-bold text-xl">MediCita</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        Sistema web para gestión y agendamiento de citas médicas.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Enlaces rápidos</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#inicio" class="hover:text-white">Inicio</a></li>
+                        <li><a href="#caracteristicas" class="hover:text-white">Características</a></li>
+                        <li><a href="#como-funciona" class="hover:text-white">¿Cómo funciona?</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Soporte</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li><a href="#" class="hover:text-white">Ayuda</a></li>
+                        <li><a href="#" class="hover:text-white">Preguntas frecuentes</a></li>
+                        <li><a href="#" class="hover:text-white">Términos y condiciones</a></li>
+                        <li><a href="#" class="hover:text-white">Política de privacidad</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Contacto</h4>
+                    <ul class="space-y-2 text-gray-400 text-sm">
+                        <li>📧 contactomedicita@gmail.com</li>
+                        <li>📞 3165288804</li>
+                        <li>📍 Ibagué - Tolima, Colombia</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
+                © 2026 MediCita - Sistema de Citas Médicas. Todos los derechos reservados.
+                <br>Proyecto de grado - Ingeniería de Sistemas - UNAD
+            </div>
+        </div>
+    </footer>
+
+    <!-- menu para celular script -->
+    <script>
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Citas</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f0f2f5; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl mr-2">🏥</span>
+                    <span class="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Sistema de Citas Médicas</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/paciente/dashboard" class="text-gray-600 hover:text-gray-800 transition flex items-center space-x-1">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        <span>Volver</span>
+                    </a>
+                    <a href="/logout" class="text-red-600 hover:text-red-800 transition">Salir</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto p-8">
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6">
+                <h1 class="text-2xl font-bold text-white">📋 Mis Citas Médicas</h1>
+                <p class="text-blue-100 mt-1">Consulta y gestiona todas tus citas</p>
+            </div>
+            
+            <div class="p-8" id="listaCitas">
+                <div class="text-center py-12">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <p class="text-gray-600">Cargando tus citas...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .estado-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .estado-agendada { background: #FEF3C7; color: #D97706; }
+        .estado-confirmada { background: #D1FAE5; color: #059669; }
+        .estado-cancelada { background: #FEE2E2; color: #DC2626; }
+        .estado-completada { background: #DBEAFE; color: #2563EB; }
+        .cita-card {
+            transition: all 0.3s ease;
+        }
+        .cita-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+
+    <script>
+        async function cargarCitas() {
+            const res = await fetch('/api/mis-citas');
+            const citas = await res.json();
+            const container = document.getElementById('listaCitas');
+            
+            if (citas.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12">
+                        <div class="text-6xl mb-4">📭</div>
+                        <h3 class="text-xl font-semibold text-gray-700 mb-2">No tienes citas agendadas</h3>
+                        <p class="text-gray-500 mb-6">¡Agenda tu primera cita médica!</p>
+                        <a href="/paciente/agendar" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl inline-block hover:from-blue-700 hover:to-purple-700 transition">
+                            + Agendar Cita
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '<div class="space-y-4">';
+            citas.forEach(cita => {
+                const fecha = new Date(cita.fecha).toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+                const estadoClass = `estado-${cita.estado}`;
+                const estadoTexto = {
+                    'agendada': 'Agendada',
+                    'confirmada': 'Confirmada',
+                    'cancelada': 'Cancelada',
+                    'completada': 'Completada'
+                }[cita.estado] || cita.estado;
+                
+                const hoy = new Date().toISOString().split('T')[0];
+                const puedeCancelar = cita.estado !== 'cancelada' && cita.estado !== 'completada' && cita.fecha >= hoy;
+                
+                html += `
+                    <div class="cita-card bg-gray-50 rounded-xl p-6 border-l-4 ${cita.estado === 'cancelada' ? 'border-red-500 opacity-70' : 'border-blue-500'}">
+                        <div class="flex justify-between items-start flex-wrap gap-4">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2 flex-wrap">
+                                    <h3 class="text-lg font-bold text-gray-800">👨‍⚕️ ${cita.medico_nombre}</h3>
+                                    <span class="px-2 py-1 bg-gray-200 rounded-lg text-sm">${cita.especialidad}</span>
+                                </div>
+                                <div class="space-y-1 text-gray-600">
+                                    <p>📅 <span class="font-medium">Fecha:</span> ${fecha}</p>
+                                    <p>⏰ <span class="font-medium">Hora:</span> ${cita.hora}</p>
+                                    ${cita.motivo ? `<p>📝 <span class="font-medium">Motivo:</span> ${cita.motivo}</p>` : ''}
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="estado-badge ${estadoClass}">${estadoTexto}</span>
+                                ${puedeCancelar ? `
+                                    <button onclick="cancelarCita(${cita.id})" class="block mt-3 text-red-600 hover:text-red-800 text-sm font-medium">
+                                        Cancelar cita
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        async function cancelarCita(id) {
+            if (confirm('¿Estás seguro de cancelar esta cita?')) {
+                const res = await fetch(`/api/cancelar-cita/${id}`, { method: 'POST' });
+                const result = await res.json();
+                if (result.success) {
+                    alert('✅ Cita cancelada exitosamente');
+                    cargarCitas();
+                } else {
+                    alert('❌ Error al cancelar la cita');
+                }
+            }
+        }
+        
+        cargarCitas();
+    </script>
+</body>
+</html>

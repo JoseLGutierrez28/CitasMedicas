@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Médico - Citas Médicas</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f0f2f5; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl mr-2">🏥</span>
+                    <span class="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Sistema de Citas Médicas</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-600" id="userNombre">Cargando...</span>
+                    <a href="/logout" class="text-red-600 hover:text-red-800 transition">Salir</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto p-8">
+        <!-- Welcome Banner -->
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white mb-8">
+            <h1 class="text-3xl font-bold mb-2">👨‍⚕️ Panel del Médico</h1>
+            <p class="text-blue-100" id="welcomeMsg">Bienvenido a tu panel de control</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-2xl p-6 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Citas Hoy</p>
+                        <p class="text-3xl font-bold text-gray-800" id="citasHoy">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Citas</p>
+                        <p class="text-3xl font-bold text-gray-800" id="totalCitas">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Pacientes Atendidos</p>
+                        <p class="text-3xl font-bold text-gray-800" id="totalPacientes">0</p>
+                    </div>
+                    <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="border-b border-gray-200">
+                <nav class="flex -mb-px">
+                    <button onclick="showTab('citas')" id="tabCitasBtn" class="py-4 px-6 text-blue-600 border-b-2 border-blue-600 font-medium transition">
+                        📋 Mis Citas
+                    </button>
+                    <button onclick="showTab('pacientes')" id="tabPacientesBtn" class="py-4 px-6 text-gray-500 hover:text-gray-700 font-medium transition">
+                        👥 Mis Pacientes
+                    </button>
+                </nav>
+            </div>
+            
+            <div id="citasTab" class="p-6">
+                <div id="listaCitas">
+                    <div class="text-center py-12">Cargando citas...</div>
+                </div>
+            </div>
+            
+            <div id="pacientesTab" class="p-6 hidden">
+                <div id="listaPacientes">
+                    <div class="text-center py-12">Cargando pacientes...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .estado-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .estado-agendada { background: #FEF3C7; color: #D97706; }
+        .estado-confirmada { background: #D1FAE5; color: #059669; }
+        .estado-cancelada { background: #FEE2E2; color: #DC2626; }
+        .estado-completada { background: #DBEAFE; color: #2563EB; }
+        select.estado-select {
+            padding: 4px 8px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 12px;
+        }
+    </style>
+
+    <script>
+        let citasData = [];
+        
+        async function loadUserData() {
+            const res = await fetch('/api/user');
+            const user = await res.json();
+            if (user.nombre) {
+                document.getElementById('userNombre').textContent = user.nombre;
+                document.getElementById('welcomeMsg').innerHTML = `Bienvenido, ${user.nombre}`;
+            }
+        }
+        
+        async function loadStats() {
+            const res = await fetch('/api/mis-citas-medico');
+            const citas = await res.json();
+            citasData = citas;
+            
+            const hoy = new Date().toISOString().split('T')[0];
+            const citasHoy = citas.filter(c => c.fecha === hoy && c.estado !== 'cancelada').length;
+            document.getElementById('citasHoy').textContent = citasHoy;
+            document.getElementById('totalCitas').textContent = citas.length;
+            
+            const pacientesRes = await fetch('/api/mis-pacientes');
+            const pacientes = await pacientesRes.json();
+            document.getElementById('totalPacientes').textContent = pacientes.length;
+        }
+        
+        async function loadCitas() {
+            const res = await fetch('/api/mis-citas-medico');
+            const citas = await res.json();
+            citasData = citas;
+            
+            if (citas.length === 0) {
+                document.getElementById('listaCitas').innerHTML = '<div class="text-center py-12 text-gray-500">No tienes citas programadas</div>';
+                return;
+            }
+            
+            let html = '<div class="space-y-4">';
+            citas.forEach(cita => {
+                const fecha = new Date(cita.fecha).toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
+                const estadoClass = `estado-${cita.estado}`;
+                
+                html += `
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                        <div class="flex justify-between items-start flex-wrap gap-4">
+                            <div>
+                                <p class="font-bold text-gray-800">👤 ${cita.paciente_nombre}</p>
+                                <p class="text-sm text-gray-600">📅 ${fecha} - ⏰ ${cita.hora}</p>
+                                <p class="text-sm text-gray-600">📞 Tel: ${cita.paciente_telefono || 'No registrado'}</p>
+                            </div>
+                            <div class="text-right">
+                                <select onchange="cambiarEstado(${cita.id}, this.value)" class="estado-select ${estadoClass}">
+                                    <option value="agendada" ${cita.estado === 'agendada' ? 'selected' : ''}>Agendada</option>
+                                    <option value="confirmada" ${cita.estado === 'confirmada' ? 'selected' : ''}>Confirmada</option>
+                                    <option value="completada" ${cita.estado === 'completada' ? 'selected' : ''}>Completada</option>
+                                    <option value="cancelada" ${cita.estado === 'cancelada' ? 'selected' : ''}>Cancelada</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            document.getElementById('listaCitas').innerHTML = html;
+        }
+        
+        async function cambiarEstado(citaId, nuevoEstado) {
+            const res = await fetch(`/api/actualizar-estado-cita/${citaId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ estado: nuevoEstado })
+            });
+            const result = await res.json();
+            if (result.success) {
+                loadCitas();
+                loadStats();
+            } else {
+                alert('Error al actualizar el estado');
+            }
+        }
+        
+        async function loadPacientes() {
+            const res = await fetch('/api/mis-pacientes');
+            const pacientes = await res.json();
+            
+            if (pacientes.length === 0) {
+                document.getElementById('listaPacientes').innerHTML = '<div class="text-center py-12 text-gray-500">No tienes pacientes registrados</div>';
+                return;
+            }
+            
+            let html = '<div class="grid gap-4">';
+            pacientes.forEach(p => {
+                const citasPaciente = citasData.filter(c => c.paciente_nombre === p.nombre);
+                html += `
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                        <div class="flex justify-between items-start flex-wrap gap-4">
+                            <div>
+                                <p class="font-bold text-gray-800">👤 ${p.nombre}</p>
+                                <p class="text-sm text-gray-600">📧 ${p.email}</p>
+                                <p class="text-sm text-gray-600">📞 ${p.telefono || 'No registrado'}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-sm text-blue-600">${citasPaciente.length} cita(s)</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            document.getElementById('listaPacientes').innerHTML = html;
+        }
+        
+        function showTab(tab) {
+            const citasTab = document.getElementById('citasTab');
+            const pacientesTab = document.getElementById('pacientesTab');
+            const citasBtn = document.getElementById('tabCitasBtn');
+            const pacientesBtn = document.getElementById('tabPacientesBtn');
+            
+            if (tab === 'citas') {
+                citasTab.classList.remove('hidden');
+                pacientesTab.classList.add('hidden');
+                citasBtn.classList.add('text-blue-600', 'border-blue-600');
+                citasBtn.classList.remove('text-gray-500', 'border-transparent');
+                pacientesBtn.classList.remove('text-blue-600', 'border-blue-600');
+                pacientesBtn.classList.add('text-gray-500', 'border-transparent');
+                loadCitas();
+            } else {
+                citasTab.classList.add('hidden');
+                pacientesTab.classList.remove('hidden');
+                pacientesBtn.classList.add('text-blue-600', 'border-blue-600');
+                pacientesBtn.classList.remove('text-gray-500', 'border-transparent');
+                citasBtn.classList.remove('text-blue-600', 'border-blue-600');
+                citasBtn.classList.add('text-gray-500', 'border-transparent');
+                loadPacientes();
+            }
+        }
+        
+        loadUserData();
+        loadStats();
+        loadCitas();
+    </script>
+</body>
+</html>

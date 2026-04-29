@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Cita</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f0f2f5; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl mr-2">🏥</span>
+                    <span class="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Sistema de Citas Médicas</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/paciente/dashboard" class="text-gray-600 hover:text-gray-800 transition flex items-center space-x-1">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        <span>Volver</span>
+                    </a>
+                    <a href="/logout" class="text-red-600 hover:text-red-800 transition">Salir</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto p-8">
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6">
+                <h1 class="text-2xl font-bold text-white">📅 Agendar Nueva Cita</h1>
+                <p class="text-blue-100 mt-1">Completa el formulario para solicitar tu cita médica</p>
+            </div>
+            
+            <div class="p-8">
+                <form id="formCita" class="space-y-6">
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">👨‍⚕️ Especialidad / Médico</label>
+                        <select id="medico" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                            <option value="">Seleccione un médico...</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">📅 Fecha</label>
+                        <input type="date" id="fecha" min="" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">⏰ Hora</label>
+                        <select id="hora" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                            <option value="">Primero seleccione médico y fecha...</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-semibold mb-2">📝 Motivo de la consulta</label>
+                        <textarea id="motivo" rows="4" 
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                                  placeholder="Describa brevemente el motivo de su consulta..."></textarea>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="submit" 
+                                class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 transition shadow-lg">
+                            Confirmar Cita
+                        </button>
+                        <button type="reset" 
+                                class="flex-1 bg-gray-200 text-gray-700 font-semibold py-3 rounded-xl hover:bg-gray-300 transition">
+                            Limpiar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Loading indicator -->
+        <div id="loading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-2xl p-8 text-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                <p class="text-gray-700">Procesando...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showLoading() { document.getElementById('loading').classList.remove('hidden'); }
+        function hideLoading() { document.getElementById('loading').classList.add('hidden'); }
+
+        async function cargarMedicos() {
+            const res = await fetch('/api/medicos');
+            const medicos = await res.json();
+            const select = document.getElementById('medico');
+            medicos.forEach(m => {
+                const option = document.createElement('option');
+                option.value = m.id;
+                option.innerHTML = `<span class="font-bold">${m.nombre}</span> - ${m.especialidad} (${m.consultorio})`;
+                option.textContent = `${m.nombre} - ${m.especialidad} (${m.consultorio})`;
+                select.appendChild(option);
+            });
+        }
+        
+        document.getElementById('medico').addEventListener('change', cargarHorarios);
+        document.getElementById('fecha').addEventListener('change', cargarHorarios);
+        
+        async function cargarHorarios() {
+            const medicoId = document.getElementById('medico').value;
+            const fecha = document.getElementById('fecha').value;
+            
+            if (!medicoId || !fecha) return;
+            
+            showLoading();
+            const res = await fetch(`/api/horarios-disponibles/${medicoId}/${fecha}`);
+            const horarios = await res.json();
+            
+            const selectHora = document.getElementById('hora');
+            selectHora.innerHTML = '<option value="">Seleccione una hora...</option>';
+            horarios.forEach(h => {
+                const option = document.createElement('option');
+                option.value = h;
+                option.textContent = h;
+                selectHora.appendChild(option);
+            });
+            hideLoading();
+        }
+        
+        document.getElementById('formCita').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                medico_id: document.getElementById('medico').value,
+                fecha: document.getElementById('fecha').value,
+                hora: document.getElementById('hora').value,
+                motivo: document.getElementById('motivo').value
+            };
+            
+            if (!data.medico_id || !data.fecha || !data.hora) {
+                alert('Por favor complete todos los campos');
+                return;
+            }
+            
+            showLoading();
+            const res = await fetch('/api/agendar-cita', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            
+            const result = await res.json();
+            hideLoading();
+            
+            if (result.success) {
+                alert('✅ ¡Cita agendada exitosamente!');
+                window.location.href = '/paciente/mis-citas';
+            } else {
+                alert('❌ Error: ' + (result.error || 'No se pudo agendar la cita'));
+            }
+        });
+        
+        const hoy = new Date().toISOString().split('T')[0];
+        document.getElementById('fecha').min = hoy;
+        
+        cargarMedicos();
+    </script>
+</body>
+</html>
